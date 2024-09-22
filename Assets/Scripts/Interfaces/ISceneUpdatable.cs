@@ -1,6 +1,6 @@
 namespace Interfaces
 {
-    public interface IGameUpdatable
+    public interface ISceneUpdatable
     {
         void OnUpdate(float deltaTime);
     }

@@ -1,10 +1,12 @@
 using System;
+using Common;
 using Configs;
 using Interfaces;
 using JetBrains.Annotations;
+using Scene;
 using UnityEngine;
 
-public class TimeDataManager : IGameUpdatable
+public class TimeDataManager : ISceneUpdatable
 {
     public event Action<DateTime> UpdateTimeEvent = delegate {  };
     
@@ -22,13 +24,16 @@ public class TimeDataManager : IGameUpdatable
     private float _timer;
     private readonly float _updateTime;
 
-    public TimeDataManager(SettingsData data, AsyncTaskController asyncTaskController, MainThreadDispatcher mainThreadDispatcher)
+    public TimeDataManager(ServiceLocator serviceLocator)
     {
-        _data = data;
-        _asyncTaskController = asyncTaskController;
-        _mainThreadDispatcher = mainThreadDispatcher;
+        _data = serviceLocator.GetService<SettingsData>();
+        _asyncTaskController = serviceLocator.GetService<AsyncTaskController>();
+        _mainThreadDispatcher = serviceLocator.GetService<MainThreadDispatcher>();
 
-        _updateTime = data.ServerRequestUpdateTime;
+        if (_data == null)
+            return;
+        
+        _updateTime = _data.ServerRequestUpdateTime;
     }
     
     public void OnUpdate(float deltaTime)
